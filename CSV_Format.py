@@ -94,7 +94,7 @@ def csv_format(df, cat_names, cont_names, YN):
     # Housing type had categories of R (resident), C (commuter), and L (???)
     df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('R', 1)
     df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('C', 0)
-    df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('L', -1)
+    df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('L', 2) #replaced this with 2 instead of -1 for testing
     df.loc[:, 'Legacy'] = df.loc[:, 'Legacy'].fillna(0)  # Legacy had Nan instead of blanks
 
     # Replace empty cells with 'NONE'
