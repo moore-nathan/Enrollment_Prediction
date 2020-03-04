@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import sklearn.preprocessing as pre
 
 def csv_format(df, cat_names, cont_names, YN):
     # cat_names = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1"]  # category names
@@ -86,16 +87,24 @@ def csv_format(df, cat_names, cont_names, YN):
     # Changing the YN category data to 0's and 1's
     # All blanks will be assumed to be the null 0 option (must mention where that seems weird in paper)
     df.loc[:, YN] = df.loc[:, YN].replace('', 0)
-    df.loc[:, YN] = df.loc[:, YN].replace('N', 0)
-    df.loc[:, YN] = df.loc[:, YN].replace('Y', 1)
-    # Male/Female
-    df.loc[:, 'Gender'] = df.loc[:, 'Gender'].replace('M', 1)
-    df.loc[:, 'Gender'] = df.loc[:, 'Gender'].replace('F', 0)
-    # Housing type had categories of R (resident), C (commuter), and L (???)
-    df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('R', 1)
-    df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('C', 0)
-    df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('L', 2) #replaced this with 2 instead of -1 for testing
     df.loc[:, 'Legacy'] = df.loc[:, 'Legacy'].fillna(0)  # Legacy had Nan instead of blanks
+
+    # Encoding the YN columns
+    df.loc[:, YN] = df.loc[:, YN].astype(str)
+    le = pre.LabelEncoder()
+    for i in YN:
+        # print(df[i])
+        df[i] = le.fit_transform(df[i])
+    # print(df.loc[:, YN])
+    # df.loc[:, YN] = df.loc[:, YN].replace('N', 0)
+    # df.loc[:, YN] = df.loc[:, YN].replace('Y', 1)
+    # # Male/Female
+    # df.loc[:, 'Gender'] = df.loc[:, 'Gender'].replace('M', 1)
+    # df.loc[:, 'Gender'] = df.loc[:, 'Gender'].replace('F', 0)
+    # # Housing type had categories of R (resident), C (commuter), and L (???)
+    # df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('R', 1)
+    # df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('C', 0)
+    # df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('L', 2) #replaced this with 2 instead of -1 for testing
 
     # Replace empty cells with 'NONE'
     df.replace('', 'NONE', inplace=True)
