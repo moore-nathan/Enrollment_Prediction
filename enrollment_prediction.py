@@ -1,8 +1,7 @@
 #Logistic Regression v2
 #final project for Machine Learning II
 
-#Dummy variable trap idea
-
+import random as rnd
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -14,7 +13,6 @@ from sklearn.ensemble import GradientBoostingClassifier
 from xgboost import XGBClassifier
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -24,18 +22,29 @@ from sklearn.feature_selection import mutual_info_classif
 from CSV_Format import csv_format
 import pre_processing
 
+
 desired_width = 100
 pd.set_option('display.width', desired_width)
 np.set_printoptions(linewidth=desired_width)
 pd.set_option('display.max_columns',100)
 
-df = pd.read_csv("Test_AS_data_3.csv")
+cols = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1 Dept", 'SAT_COMP', 'ACT_COMP',
+        'Expected Financial Contribution', 'STANDING', 'HS GPA', 'Enrolled', 'Home State of PA', 'Home County of Cambria',
+        'Gender', 'Admitted', 'Housing Type', 'Legacy', 'Athlete']
+
+# switching intended major with intended department
+
+df = pd.read_csv("Admitted.csv", low_memory=False)  # low_memory turns off auto dtype checking (maybe)
+df = df[cols]
+# df = pd.read_csv("Test_AS_data_3.csv")
+# print(df.head())
+# print(df_test.head())
 
 # lists to depict which categories are which
-cat_names = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1"]  # category names
+cat_names = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1 Dept"]  # category names
 cont_names = ['SAT_COMP', 'ACT_COMP', 'Expected Financial Contribution', 'STANDING', 'HS GPA']
 YN = ['Enrolled', 'Home State of PA', 'Home County of Cambria', 'Gender', 'Admitted', 'Housing Type',
-          'Legacy', 'Roster Athlete']
+          'Legacy', 'Athlete']
 
 # call to reformat the data frame
 df = csv_format(df, cat_names, cont_names, YN)
@@ -62,8 +71,8 @@ y = final.Enrolled
 # print(X)
 # print(y)
 
-percent = .2
-seed = 1
+percent = .33
+seed = rnd.randint(1,1000)
 
 train_x, test_x, train_y, test_y = train_test_split(X, y, test_size=percent, random_state=seed, shuffle=True)
 
@@ -154,9 +163,6 @@ def stats(model):
     plt.legend()
     # show the plot
     plt.show()
-
-
-
     print()
 
 
@@ -164,19 +170,20 @@ def stats(model):
 # print('Logistic Regression')
 # stats(LogModel)
 # # stats(SVCModel)
-# print("K Nearest Neighbors")
-# stats(KNN)
-# # stats(KM)
-# print("Random Forest")
-# stats(forest)
-# print("Gradient Boosting")
-# stats(GBoost)
-# print('XGBC')
-# stats(XGBC)
+print("K Nearest Neighbors")
+stats(KNN)
+# stats(KM)
+print("Random Forest")
+stats(forest)
+print("Gradient Boosting")
+stats(GBoost)
+print('XGBC')
+stats(XGBC)
 
 # feature selection
 def select_features(X_train, y_train, X_test):
     fs = SelectKBest(score_func=mutual_info_classif, k='all')
+    # chi-square and mutual info classifier produce identical results
     fs.fit(X_train, y_train)
     X_train_fs = fs.transform(X_train)
     X_test_fs = fs.transform(X_test)
