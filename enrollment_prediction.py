@@ -28,7 +28,7 @@ pd.set_option('display.width', desired_width)
 np.set_printoptions(linewidth=desired_width)
 pd.set_option('display.max_columns',100)
 
-cols = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1 Dept", 'SAT_COMP', 'ACT_COMP',
+cols = ["Student ID", "State", "Country", "Ethnic Code", "Denomination", "Intended Major 1 Dept", 'SAT_COMP', 'ACT_COMP',
         'Expected Financial Contribution', 'STANDING', 'HS GPA', 'Enrolled', 'Home State of PA', 'Home County of Cambria',
         'Gender', 'Admitted', 'Housing Type', 'Legacy', 'Athlete']
 
@@ -36,9 +36,6 @@ cols = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1 Dep
 
 df = pd.read_csv("Admitted.csv", low_memory=False)  # low_memory turns off auto dtype checking (maybe)
 df = df[cols]
-# df = pd.read_csv("Test_AS_data_3.csv")
-# print(df.head())
-# print(df_test.head())
 
 # lists to depict which categories are which
 cat_names = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1 Dept"]  # category names
@@ -58,28 +55,26 @@ cat_vars = df[cat_names]
 cat_list = pd.get_dummies(cat_vars, drop_first=True)
 final = df.join(cat_list)
 final = final.drop(cat_names, axis="columns")
-# print(final.head())
-# data=df[[i for i in log if i not in cat_vars]]
-# y=df[[‘y’]]
-# x=df[[i for i in log if i not in y]]
+#removing the ID's from final
 
-#Made csv to make sure it actually removed and converted everything correctly
-# final.to_csv("test.csv", index=False)
-
+#Splitting up X(independent variables) and y(dependent variable)
 X = final.drop("Enrolled", axis="columns")
 y = final.Enrolled
-# print(X)
-# print(y)
 
 percent = .33
 seed = rnd.randint(1,1000)
 
 train_x, test_x, train_y, test_y = train_test_split(X, y, test_size=percent, random_state=seed, shuffle=True)
 
+#grabbing the IDS of just the test data and then dropping that column (this will only be done in testing)
+# print(test_x)
+ID = list(test_x.loc[:, 'Student ID'])
+train_x = train_x.drop("Student ID", axis="columns")
+test_x = test_x.drop("Student ID", axis="columns")
 
 # shape of the dataset
-print('Shape of training data :',train_x.shape, train_y.shape)
-print('Shape of testing data :',test_x.shape, test_y.shape)
+# print('Shape of training data :',train_x.shape, train_y.shape)
+# print('Shape of testing data :',test_x.shape, test_y.shape)
 
 
 # import statsmodels.api as sm
@@ -170,15 +165,15 @@ def stats(model):
 # print('Logistic Regression')
 # stats(LogModel)
 # # stats(SVCModel)
-print("K Nearest Neighbors")
-stats(KNN)
-# stats(KM)
-print("Random Forest")
-stats(forest)
-print("Gradient Boosting")
-stats(GBoost)
-print('XGBC')
-stats(XGBC)
+# print("K Nearest Neighbors")
+# stats(KNN)
+# # stats(KM)
+# print("Random Forest")
+# stats(forest)
+# print("Gradient Boosting")
+# stats(GBoost)
+# print('XGBC')
+# stats(XGBC)
 
 # feature selection
 def select_features(X_train, y_train, X_test):
@@ -192,6 +187,14 @@ def select_features(X_train, y_train, X_test):
 
 print("XGBC testing")
 XGBC.fit(test_x,test_y)
+prob = XGBC.predict_proba(test_x)
+# print(prob[:,0])
+
+# print(l)
+probs = pd.DataFrame({'ID': ID, 'Not_Enrolling_Percentage': prob[:, 0], 'Enrolling_Percentage': prob[:, 1]},
+                     columns=['ID', 'Not_Enrolling_Percentage', 'Enrolling_Percentage'])
+# print(probs)
+probs.to_csv("Prob_test.csv", index=False)
 # print(XGBC.feature_importances_)
 # print(X.columns)
 
