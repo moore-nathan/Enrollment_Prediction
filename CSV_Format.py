@@ -95,16 +95,6 @@ def csv_format(df, cat_names, cont_names, YN):
     for i in YN:
         # print(df[i])
         df[i] = le.fit_transform(df[i])
-    # print(df.loc[:, YN])
-    # df.loc[:, YN] = df.loc[:, YN].replace('N', 0)
-    # df.loc[:, YN] = df.loc[:, YN].replace('Y', 1)
-    # # Male/Female
-    # df.loc[:, 'Gender'] = df.loc[:, 'Gender'].replace('M', 1)
-    # df.loc[:, 'Gender'] = df.loc[:, 'Gender'].replace('F', 0)
-    # # Housing type had categories of R (resident), C (commuter), and L (???)
-    # df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('R', 1)
-    # df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('C', 0)
-    # df.loc[:, 'Housing Type'] = df.loc[:, 'Housing Type'].replace('L', 2) #replaced this with 2 instead of -1 for testing
 
     # Replace empty cells with 'NONE'
     df.replace('', 'NONE', inplace=True)
@@ -117,6 +107,5 @@ def csv_format(df, cat_names, cont_names, YN):
     # Normalizing the EFC column
     df.loc[:, 'Expected Financial Contribution'] = \
         (df.loc[:, 'Expected Financial Contribution'] - df.loc[:, 'Expected Financial Contribution'].mean()) / df.loc[:, 'Expected Financial Contribution'].std()
-    # print(df['Expected Financial Contribution'].value_counts())
 
     return df
