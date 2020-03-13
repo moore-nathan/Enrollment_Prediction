@@ -10,5 +10,6 @@ setup(
     author_email='cheeksofwhite@gmail.com',
     description='Enrollment Prediction for Saint Francis University',
     install_requires = ['pandas', 'numpy',"sklearn","xgboost",'matplotlib',
-              'pycountry_convert','pycountry']
+              'pycountry_convert','pycountry'],
+    scripts=['Enroll_script.py'],
 )
