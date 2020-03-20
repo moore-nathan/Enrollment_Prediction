@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import sklearn.preprocessing as pre
+from sklearn import preprocessing as pre
 
 def csv_format(df, cat_names, cont_names, YN):
     # cat_names = ["State", "Country", "Ethnic Code", "Denomination", "Intended Major 1"]  # category names
@@ -59,6 +59,8 @@ def csv_format(df, cat_names, cont_names, YN):
     df.loc[:, 'Expected Financial Contribution'] = \
         df.loc[:, 'Expected Financial Contribution'].replace('[\$,]', '', regex=True).astype(float)
 
+    # df.loc[:, 'MARKET_SEG'] = df.loc[:, 'MARKET_SEG'].astype(float)
+
     # cont_names = ['SAT_COMP', 'ACT_COMP', 'Expected Financial Contribution', 'STANDING', 'HS GPA']
 
     # this is how you have to replace things in a column (can be used for multiple columns at one time
@@ -107,5 +109,4 @@ def csv_format(df, cat_names, cont_names, YN):
     # Normalizing the EFC column
     df.loc[:, 'Expected Financial Contribution'] = \
         (df.loc[:, 'Expected Financial Contribution'] - df.loc[:, 'Expected Financial Contribution'].mean()) / df.loc[:, 'Expected Financial Contribution'].std()
-
     return df
