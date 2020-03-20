@@ -63,7 +63,15 @@ def pre_process(df):
         countries = [x.upper() for x in countries]
         continents = dict(zip(countries, cont))
 
+        # Hard coded countries with full names that did not
+        continents['VIETNAM'] = continents.pop('VIET NAM')
+        continents['VENEZUELA'] = continents.pop('VENEZUELA, BOLIVARIAN REPUBLIC OF')
+        continents['TURKS & CAICOS ISLANDS'] = continents.pop('TURKS AND CAICOS ISLANDS')
+        continents['TANZANIA'] = continents.pop('TANZANIA, UNITED REPUBLIC OF')
+        continents['TAIWAN'] = continents.pop('TAIWAN, PROVINCE OF CHINA')
+        continents['MACEDONIA'] = continents.pop('NORTH MACEDONIA')
         df.loc[:, 'Country'] = df.loc[:, 'Country'].replace(continents)
+        df.loc[:, 'Country'] = df.loc[:, 'Country'].replace({'ENGLAND': "EUROPE"})
         # some names are off because they include full title but this works
 
     country_to_region()
