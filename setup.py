@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='Enrollment_Prediction',
     version='1.1',
-    packages=find_packages(),
+    packages=find_packages(exclude='Data'),
     url='https://github.com/whitecheeks33/Enrollment_Prediction',
     license='SFU',
     author='Nathan Moore',
@@ -11,5 +11,8 @@ setup(
     description='Enrollment Prediction for Saint Francis University',
     install_requires=['pandas', 'numpy', "sklearn", "xgboost", 'matplotlib',
                       'pycountry_convert', 'pycountry'],
-    scripts=['Enroll_script.py'],
+    entry_points={'console_scripts': [
+            'runner= Enrollment_Prediction.enrollment_prediction:main',
+        ],
+    },
 )

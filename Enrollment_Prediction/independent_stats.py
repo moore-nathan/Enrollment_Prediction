@@ -33,7 +33,7 @@ class independentStats:
             Y1 = [k[0] for k in dickY.values()]
             N1 = [k[1] for k in dickY.values()]
             fuck = pandas.DataFrame({"yes": Y1, "no": N1}, index=dickY.keys())
-            fuck.plot.bar()
+            fuck.plot.bar(logy=True)
             plt.title(i)
             plt.show()
         # [df[i].value_counts().plot(kind='bar') for i in cat_names]
