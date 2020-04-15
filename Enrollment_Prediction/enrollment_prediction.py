@@ -96,10 +96,15 @@ def main():
     final = df.join(cat_list)
     final = final.drop(cat_names, axis="columns")
     #removing the ID's from final
+    # tested and for XGBoost everything must be int/float/bool
 
     #Splitting up X(independent variables) and y(dependent variable)
     X = final.drop("Enrolled", axis="columns")
     y = final.Enrolled
+
+    # # test cases for testing no dummy variables
+    # X = df.drop("Enrolled", axis="columns")
+    # y = df.Enrolled
 
     percent = .33
     seed = rnd.randint(1,1000)
@@ -128,18 +133,6 @@ def main():
 
 
     # models= {"Logistic Regression": LogModel, "K Nearest Neighbors": KNN, "Random Forest": forest, "Gradient Boosting":GBoost, "XGBC": XGBC}
-    # print('Logistic Regression')
-    # stats(LogModel)
-    # # stats(SVCModel)
-    # print("K Nearest Neighbors")
-    # stats(KNN)
-    # # stats(KM)
-    # print("Random Forest")
-    # stats(forest)
-    # print("Gradient Boosting")
-    # stats(GBoost)
-    print('XGBC')
-    # stats(XGBC)
 
     print("XGBC testing")
     IS.stats(XGBC, train_x, train_y, test_x, test_y)
